@@ -8,7 +8,7 @@ const IndexPage = () => {
 
   return (
     <div>
-      Hello World!
+      <h1 className="text-4xl font-bold underline">Hello world!</h1>
       <button onClick={() => signOut()}>Sign out</button>
     </div>
   )
@@ -17,9 +17,9 @@ const IndexPage = () => {
 export const getServerSideProps = async ({ req }: any) => {
   const session = await getSession({ req })
 
-  if (!session) {
-    return { redirect: { permanent: false, destination: "/api/auth/signin" } }
-  }
+  // if (!session) {
+  //   return { redirect: { permanent: false, destination: "/api/auth/signin" } }
+  // }
 
   return { props: {} }
 }

@@ -5,7 +5,7 @@ const handler = async (req: any, res: any) => {
 
   console.log(session)
 
-  res.json(session)
+  res.json(session ?? { response: "No session" })
 }
 
 export default handler

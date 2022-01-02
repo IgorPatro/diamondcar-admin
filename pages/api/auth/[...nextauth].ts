@@ -27,7 +27,7 @@ export default NextAuth({
           credentials.password === "pass123"
         ) {
           return {
-            id: 264817401,
+            id: "admin",
             name: "admin",
           }
         }

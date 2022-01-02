@@ -1,5 +1,5 @@
 import React from "react"
-import { useSession, getSession, signIn, signOut } from "next-auth/react"
+import { useSession, getSession, signOut } from "next-auth/react"
 
 const IndexPage = () => {
   const { data: session } = useSession()
@@ -9,7 +9,6 @@ const IndexPage = () => {
   return (
     <div>
       Hello World!
-      <button onClick={() => signIn()}>Sign in</button>
       <button onClick={() => signOut()}>Sign out</button>
     </div>
   )

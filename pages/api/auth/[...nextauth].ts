@@ -6,10 +6,10 @@ export default NextAuth({
     CredentialProvider({
       name: "credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "johndoe@test.com",
+        login: {
+          label: "Login",
+          type: "text",
+          placeholder: "login",
         },
         password: {
           label: "Password",
@@ -23,8 +23,8 @@ export default NextAuth({
         }
 
         if (
-          credentials.email === "i.patro@wp.pl" &&
-          credentials.password === "pass123"
+          credentials.login === "diamondCarAdmin17" &&
+          credentials.password === process.env.ADMIN_PASSWORD
         ) {
           return {
             id: "admin",
@@ -52,9 +52,9 @@ export default NextAuth({
       return session
     },
   },
-  secret: "test",
+  secret: process.env.NEXTAUTH_JWT_SECRET,
   jwt: {
-    secret: "test",
+    secret: process.env.NEXTAUTH_JWT_SECRET,
   },
   session: {
     maxAge: 60,

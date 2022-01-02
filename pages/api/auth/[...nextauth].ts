@@ -23,7 +23,7 @@ export default NextAuth({
         }
 
         if (
-          credentials.login === "diamondCarAdmin17" &&
+          credentials.login === process.env.ADMIN_LOGIN &&
           credentials.password === process.env.ADMIN_PASSWORD
         ) {
           return {

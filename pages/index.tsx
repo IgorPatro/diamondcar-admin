@@ -1,5 +1,5 @@
 import React from "react"
-import { useSession, getSession, signOut } from "next-auth/react"
+import { useSession, getSession, signOut, signIn } from "next-auth/react"
 
 const IndexPage = () => {
   const { data: session } = useSession()
@@ -9,6 +9,7 @@ const IndexPage = () => {
   return (
     <div>
       <h1 className="text-4xl font-bold underline">Hello world!</h1>
+      <button onClick={() => signIn()}>Sign in</button>
       <button onClick={() => signOut()}>Sign out</button>
     </div>
   )
@@ -16,6 +17,8 @@ const IndexPage = () => {
 
 export const getServerSideProps = async ({ req }: any) => {
   const session = await getSession({ req })
+
+  console.log(session)
 
   // if (!session) {
   //   return { redirect: { permanent: false, destination: "/api/auth/signin" } }

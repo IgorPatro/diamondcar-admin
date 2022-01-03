@@ -1,18 +1,13 @@
 import React from "react"
-import { useSession, getSession, signOut, signIn } from "next-auth/react"
+import { useSession, getSession } from "next-auth/react"
+import Navigation from "@src/Navigation"
 
 const IndexPage = () => {
   const { data: session } = useSession()
 
   console.log(session)
 
-  return (
-    <div>
-      <h1 className="text-4xl font-bold underline">Hello world!</h1>
-      <button onClick={() => signIn()}>Sign in</button>
-      <button onClick={() => signOut()}>Sign out</button>
-    </div>
-  )
+  return <Navigation />
 }
 
 export const getServerSideProps = async ({ req }: any) => {

@@ -5,8 +5,10 @@ const handler = async (req: any, res: any) => {
   const session = await getSession({ req })
 
   // if (!session) {
-  //   res.statusMessage = `You have to be authorized to use this api.`
-  //   res.status(401).end()
+  //   res.json({
+  //     message: "You have to be authorized to use this API",
+  //     status: "error",
+  //   })
   //   return
   // }
 

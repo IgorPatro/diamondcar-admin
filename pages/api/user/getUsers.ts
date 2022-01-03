@@ -4,6 +4,7 @@ import { getSession } from "next-auth/react"
 const handler = async (req: any, res: any) => {
   const session = await getSession({ req })
 
+  // TODO: uncomment
   // if (!session) {
   //   res.json({
   //     message: "You have to be authorized to use this API",

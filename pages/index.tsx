@@ -1,24 +1,78 @@
 import React from "react"
-import { useSession, getSession, signOut, signIn } from "next-auth/react"
+import { useSession, getSession } from "next-auth/react"
+import { UsersObject, User } from "@src/interfaces"
+import axios from "axios"
+import { ToastContainer, toast } from "react-toastify"
+import Navigation from "@src/Navigation"
+import Users from "@src/Users"
+import "react-toastify/dist/ReactToastify.css"
 
 const IndexPage = () => {
-  const { data: session } = useSession()
+  const [users, setUsers] = React.useState<null | UsersObject>(null)
+  const [filteredUsers, setFilteredUsers] = React.useState<null | UsersObject>(
+    null
+  )
+  const [filter, setFilter] = React.useState<string>("")
 
-  console.log(session)
+  React.useEffect(() => {
+    axios.get("/api/user/getUsers").then((response) => {
+      if (response.data.status === "error") {
+        return toast.error(response.data.message)
+      }
+
+      setUsers(response.data)
+    })
+  }, [])
+
+  React.useEffect(() => {
+    if (!users) {
+      return
+    }
+
+    const usersIds = Object.keys(users).map((key) => key)
+
+    const filterUsers: Record<string, User> = {}
+    usersIds.forEach((userId) => {
+      const currentUser = users[userId]
+      const filterToLowerCase = filter.toLowerCase()
+
+      if (
+        currentUser.firstName.toLowerCase().includes(filterToLowerCase) ||
+        currentUser.lastName.toLowerCase().includes(filterToLowerCase) ||
+        currentUser.email.toLowerCase().includes(filterToLowerCase) ||
+        currentUser.saldo === Number(filterToLowerCase)
+      ) {
+        filterUsers[userId] = users[userId]
+      }
+    })
+
+    setFilteredUsers(filterUsers)
+  }, [filter, users])
 
   return (
-    <div>
-      <h1 className="text-4xl font-bold underline">Hello world!</h1>
-      <button onClick={() => signIn()}>Sign in</button>
-      <button onClick={() => signOut()}>Sign out</button>
-    </div>
+    <>
+      <Navigation setFilter={setFilter} filter={filter} />
+      <Users users={filter ? filteredUsers : users} />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+    </>
   )
 }
 
 export const getServerSideProps = async ({ req }: any) => {
   const session = await getSession({ req })
 
-  console.log(session)
+  // console.log(session)
 
   // if (!session) {
   //   return { redirect: { permanent: false, destination: "/api/auth/signin" } }

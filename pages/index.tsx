@@ -14,7 +14,7 @@ const IndexPage = () => {
   )
   const [filter, setFilter] = React.useState<string>("")
 
-  React.useEffect(() => {
+  const fetchUsers = () => {
     axios.get("/api/user/getUsers").then((response) => {
       if (response.data.status === "error") {
         return toast.error(response.data.message)
@@ -22,6 +22,10 @@ const IndexPage = () => {
 
       setUsers(response.data)
     })
+  }
+
+  React.useEffect(() => {
+    fetchUsers()
   }, [])
 
   React.useEffect(() => {
@@ -46,7 +50,7 @@ const IndexPage = () => {
       }
     })
 
-    setFilteredUsers(filterUsers)
+    setFilteredUsers(Object.keys(filterUsers).length ? filterUsers : null)
   }, [filter, users])
 
   return (

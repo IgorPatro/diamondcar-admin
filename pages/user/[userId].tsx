@@ -3,14 +3,15 @@ import { getSession } from "next-auth/react"
 import axios from "axios"
 import { toast } from "react-toastify"
 import SimpleNavigation from "@src/SimpleNavigation"
-import { User } from "@src/interfaces"
+import { User as UserInterface } from "@src/interfaces"
+import User from "@src/User"
 
 interface Props {
   userId: string
 }
 
 const UserPage = ({ userId }: Props) => {
-  const [user, setUser] = React.useState<User | null>(null)
+  const [user, setUser] = React.useState<UserInterface | null>(null)
 
   const fetchUser = (userId: string) => {
     axios.post("/api/user/getUser", { userId }).then((response) => {
@@ -31,11 +32,7 @@ const UserPage = ({ userId }: Props) => {
       <SimpleNavigation />
       <div className="m-20 p-10 drop-shadow-lg bg-gray-200">
         {user ? (
-          <div>
-            <h3 className="text-3xl">{`${user.firstName} ${user.lastName}`}</h3>
-            <h3 className="text-3xl">{user.email}</h3>
-            <h3 className="text-3xl">{user.saldo} zł</h3>
-          </div>
+          <User user={user} userId={userId} fetchUser={fetchUser} />
         ) : (
           <h2 className="font-bold text-3xl">There is no user with given id</h2>
         )}

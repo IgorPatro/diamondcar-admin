@@ -1,4 +1,5 @@
 import React from "react"
+import Link from "next/link"
 import { UsersObject } from "./interfaces"
 
 interface Props {
@@ -34,7 +35,7 @@ const Users = ({ users }: Props) => {
               <tr className="text-gray-700" key={key}>
                 <td className="border p-4 dark:border-dark-5">{index + 1}</td>
                 <td className="border p-4 dark:border-dark-5">
-                  {users[key].firstName}
+                  <Link href={`/user/${key}`}>{users[key].firstName}</Link>
                 </td>
                 <td className="border p-4 dark:border-dark-5">
                   {users[key].lastName}

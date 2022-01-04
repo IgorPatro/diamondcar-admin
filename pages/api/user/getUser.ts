@@ -1,6 +1,5 @@
 import FirebaseAdmin from "@src/firebaseAdmin"
 import { getSession } from "next-auth/react"
-import { User } from "@src/interfaces"
 
 const handler = async (req: any, res: any) => {
   const session = await getSession({ req })

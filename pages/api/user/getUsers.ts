@@ -1,5 +1,6 @@
 import FirebaseAdmin from "@src/firebaseAdmin"
 import { getSession } from "next-auth/react"
+import { User } from "@src/interfaces"
 
 const handler = async (req: any, res: any) => {
   const session = await getSession({ req })
@@ -13,13 +14,13 @@ const handler = async (req: any, res: any) => {
   //   return
   // }
 
-  const data: Record<string, any> = {}
+  const data: Record<string, User> = {}
   await FirebaseAdmin.firestore()
     .collection("users")
     .get()
     .then((snapshot) => {
       snapshot.forEach((doc) => {
-        data[doc.id] = doc.data()
+        data[doc.id] = doc.data() as User
       })
     })
 

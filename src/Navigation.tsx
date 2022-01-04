@@ -1,7 +1,12 @@
 import React from "react"
 import { signOut } from "next-auth/react"
 
-const Navigation = () => {
+interface Props {
+  setFilter: React.Dispatch<React.SetStateAction<string>>
+  filter: string
+}
+
+const Navigation = ({ setFilter, filter }: Props) => {
   return (
     <nav className="w-full shadow-lg bg-white dark:bg-gray-700 items-center h-16 z-40">
       <div className="relative z-20 flex flex-col justify-center h-full px-3 mx-auto flex-center">
@@ -19,6 +24,8 @@ const Navigation = () => {
                 type="text"
                 className="block w-full py-1.5 pl-10 pr-4 leading-normal rounded-2xl focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 ring-opacity-90 bg-gray-100 dark:bg-gray-800 text-gray-400 aa-input"
                 placeholder="Search user"
+                onChange={(e) => setFilter(e.target.value)}
+                value={filter}
               />
             </div>
           </div>

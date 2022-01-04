@@ -1,6 +1,6 @@
 import React from "react"
 import { useSession, getSession } from "next-auth/react"
-import { UsersObject } from "@src/interfaces"
+import { UsersObject, User } from "@src/interfaces"
 import axios from "axios"
 import { ToastContainer, toast } from "react-toastify"
 import Navigation from "@src/Navigation"
@@ -9,6 +9,10 @@ import "react-toastify/dist/ReactToastify.css"
 
 const IndexPage = () => {
   const [users, setUsers] = React.useState<null | UsersObject>(null)
+  const [filteredUsers, setFilteredUsers] = React.useState<null | UsersObject>(
+    null
+  )
+  const [filter, setFilter] = React.useState<string>("")
 
   React.useEffect(() => {
     axios.get("/api/user/getUsers").then((response) => {
@@ -21,13 +25,34 @@ const IndexPage = () => {
   }, [])
 
   React.useEffect(() => {
-    console.log(users)
-  }, [users])
+    if (!users) {
+      return
+    }
+
+    const usersIds = Object.keys(users).map((key) => key)
+
+    const filterUsers: Record<string, User> = {}
+    usersIds.forEach((userId) => {
+      const currentUser = users[userId]
+      const filterToLowerCase = filter.toLowerCase()
+
+      if (
+        currentUser.firstName.toLowerCase().includes(filterToLowerCase) ||
+        currentUser.lastName.toLowerCase().includes(filterToLowerCase) ||
+        currentUser.email.toLowerCase().includes(filterToLowerCase) ||
+        currentUser.saldo === Number(filterToLowerCase)
+      ) {
+        filterUsers[userId] = users[userId]
+      }
+    })
+
+    setFilteredUsers(filterUsers)
+  }, [filter, users])
 
   return (
     <>
-      <Navigation />
-      <Users users={users} />
+      <Navigation setFilter={setFilter} filter={filter} />
+      <Users users={filter ? filteredUsers : users} />
       <ToastContainer
         position="bottom-right"
         autoClose={5000}

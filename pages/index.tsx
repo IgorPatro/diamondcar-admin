@@ -1,5 +1,5 @@
 import React from "react"
-import { useSession, getSession } from "next-auth/react"
+import { getSession } from "next-auth/react"
 import { UsersObject, User } from "@src/interfaces"
 import axios from "axios"
 import { ToastContainer, toast } from "react-toastify"
@@ -75,8 +75,6 @@ const IndexPage = () => {
 
 export const getServerSideProps = async ({ req }: any) => {
   const session = await getSession({ req })
-
-  // console.log(session)
 
   // if (!session) {
   //   return { redirect: { permanent: false, destination: "/api/auth/signin" } }

@@ -35,6 +35,25 @@ const handler = async (req: any, res: any) => {
     return
   }
 
+  let userInAuthService = true
+  if (updateData.email) {
+    userInAuthService = await FirebaseAdmin.auth()
+      .updateUser(userId, updateData)
+      .then(() => true)
+      .catch((err) => {
+        console.log(err)
+        return false
+      })
+  }
+
+  if (!userInAuthService) {
+    res.json({
+      message: "User data wasn't changed due to error",
+      status: "error",
+    })
+    return
+  }
+
   res.json({ message: "User updated successfully", status: "success" })
 }
 

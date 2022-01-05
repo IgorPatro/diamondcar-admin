@@ -30,8 +30,6 @@ const handler = async (req: any, res: any) => {
       return false
     })
 
-  console.log(userToUpdate)
-
   if (!userToUpdate) {
     res.json({ message: "There is no user with given id", status: "error" })
     return
@@ -39,7 +37,7 @@ const handler = async (req: any, res: any) => {
 
   const isDataAdded = await FirebaseAdmin.firestore()
     .collection("registries")
-    .add(registryData)
+    .add({ ...registryData, timestamp: new Date().toString() })
     .then(() => true)
     .catch((err) => {
       console.log(err)

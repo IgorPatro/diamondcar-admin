@@ -11,6 +11,7 @@ interface Registry {
   userId: string
   value: number
   description: string
+  timestamp: string
 }
 
 export type { User, Registry, UsersObject }

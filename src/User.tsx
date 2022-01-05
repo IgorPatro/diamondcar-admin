@@ -1,5 +1,5 @@
 import React from "react"
-import { User as UserInterface } from "@src/interfaces"
+import { User as UserInterface, RegistriesObject } from "@src/interfaces"
 import { toast } from "react-toastify"
 import axios from "axios"
 import BasicUserInfo from "./BasicUserInfo"
@@ -18,7 +18,9 @@ interface Props {
 }
 
 const User = ({ user, userId, fetchUser }: Props) => {
-  const [registries, setRegistries] = React.useState()
+  const [registries, setRegistries] = React.useState<RegistriesObject | null>(
+    null
+  )
 
   const updateUser = (updateData: any) => {
     axios
@@ -52,7 +54,6 @@ const User = ({ user, userId, fetchUser }: Props) => {
           return toast.error(response.data.message)
         }
 
-        console.log(response.data)
         setRegistries(response.data)
       })
   }
@@ -74,9 +75,15 @@ const User = ({ user, userId, fetchUser }: Props) => {
         </button>
       </div>
       <div className="w-full flex flex-col gap-5">
-        {registries ? (
+        {registries && Object.keys(registries).length ? (
           Object.keys(registries).map((key) => (
-            <Registry key={key} registry={registries[key]} />
+            <Registry
+              key={key}
+              registry={registries[key]}
+              registryId={key}
+              userId={userId}
+              fetchUserRegistries={fetchUserRegistries}
+            />
           ))
         ) : (
           <h2 className="text-2xl">There are no registries for this user</h2>

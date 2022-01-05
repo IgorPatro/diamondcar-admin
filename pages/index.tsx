@@ -1,11 +1,10 @@
 import React from "react"
-import { useSession, getSession } from "next-auth/react"
+import { getSession } from "next-auth/react"
 import { UsersObject, User } from "@src/interfaces"
 import axios from "axios"
-import { ToastContainer, toast } from "react-toastify"
+import { toast } from "react-toastify"
 import Navigation from "@src/Navigation"
 import Users from "@src/Users"
-import "react-toastify/dist/ReactToastify.css"
 
 const IndexPage = () => {
   const [users, setUsers] = React.useState<null | UsersObject>(null)
@@ -57,26 +56,12 @@ const IndexPage = () => {
     <>
       <Navigation setFilter={setFilter} filter={filter} />
       <Users users={filter ? filteredUsers : users} />
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
     </>
   )
 }
 
 export const getServerSideProps = async ({ req }: any) => {
   const session = await getSession({ req })
-
-  // console.log(session)
 
   // if (!session) {
   //   return { redirect: { permanent: false, destination: "/api/auth/signin" } }

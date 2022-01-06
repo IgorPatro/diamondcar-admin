@@ -31,8 +31,6 @@ const handler = async (req: any, res: any) => {
       })
     })
 
-  console.log(data)
-
   res.json(data)
 }
 

@@ -11,6 +11,9 @@ interface Registry {
   userId: string
   value: number
   description: string
+  timestamp: string
 }
 
-export type { User, Registry, UsersObject }
+type RegistriesObject = Record<string, Registry>
+
+export type { User, Registry, UsersObject, RegistriesObject }

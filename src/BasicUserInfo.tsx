@@ -23,7 +23,7 @@ const BasicUserInfo = ({ user, updateUser }: Props) => {
 
   return (
     <div>
-      <p className="text-2xl">
+      <p className="text-3xl">
         {editionOpen.firstName ? (
           <>
             <input
@@ -123,7 +123,7 @@ const BasicUserInfo = ({ user, updateUser }: Props) => {
           </>
         )}
       </p>
-      <p className="text-2xl my-3">
+      <p className="text-3xl my-3">
         {editionOpen.email ? (
           <>
             <input
@@ -173,7 +173,7 @@ const BasicUserInfo = ({ user, updateUser }: Props) => {
           </>
         )}
       </p>
-      <p className="text-2xl my-3">
+      <p className="text-3xl my-3">
         {editionOpen.saldo ? (
           <>
             <input

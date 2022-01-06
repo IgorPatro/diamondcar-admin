@@ -4,6 +4,7 @@ import { toast } from "react-toastify"
 import axios from "axios"
 import BasicUserInfo from "./BasicUserInfo"
 import Registry from "./Registry"
+import RegistryForm from "./RegistryForm"
 
 const registry = {
   userId: "jRdPPGG6vWO3X5i7lH93c5VGvnC2",
@@ -73,6 +74,11 @@ const User = ({ user, userId, fetchUser }: Props) => {
         >
           Send password reset
         </button>
+        <RegistryForm
+          userId={userId}
+          fetchUserRegistries={fetchUserRegistries}
+          fetchUser={fetchUser}
+        />
       </div>
       <div className="w-full flex flex-col gap-5">
         {registries && Object.keys(registries).length ? (

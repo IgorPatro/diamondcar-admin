@@ -5,6 +5,7 @@ import axios from "axios"
 import { toast } from "react-toastify"
 import Navigation from "@src/Navigation"
 import Users from "@src/Users"
+import UserForm from "@src/UserForm"
 
 const IndexPage = () => {
   const [users, setUsers] = React.useState<null | UsersObject>(null)
@@ -56,6 +57,7 @@ const IndexPage = () => {
     <>
       <Navigation setFilter={setFilter} filter={filter} />
       <Users users={filter ? filteredUsers : users} />
+      <UserForm fetchUsers={fetchUsers} />
     </>
   )
 }

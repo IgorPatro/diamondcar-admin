@@ -13,4 +13,4 @@ jobs:
           host: ${{ secrets.DEVELOPMENT_HOST }}
           username: ${{ secrets.DEVELOPMENT_USERNAME }}
           password: ${{ secrets.DEVELOPMENT_PASSWORD }}
-          script: whoami
+          script: pwd

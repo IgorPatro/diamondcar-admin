@@ -1,0 +1,16 @@
+name: Development build
+
+on: workflow_dispatch
+
+jobs:
+  connection-test:
+    name: Test VPS connection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute remote command on vps
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEVELOPMENT_HOST }}
+          username: ${{ secrets.DEVELOPMENT_USERNAME }}
+          password: ${{ secrets.DEVELOPMENT_PASSWORD }}
+          script: whoami

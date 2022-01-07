@@ -57,7 +57,7 @@ const IndexPage = () => {
     <>
       <Navigation setFilter={setFilter} filter={filter} />
       <Users users={filter ? filteredUsers : users} />
-      <UserForm />
+      <UserForm fetchUsers={fetchUsers} />
     </>
   )
 }

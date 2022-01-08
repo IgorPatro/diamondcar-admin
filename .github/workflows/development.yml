@@ -4,10 +4,10 @@ on: workflow_dispatch
 
 jobs:
   connection-test:
-    name: Test VPS connection
+    name: VPS connection test
     runs-on: ubuntu-latest
     steps:
-      - name: Execute remote command on vps
+      - name: Executing remote command on vps
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEVELOPMENT_HOST }}
@@ -20,20 +20,70 @@ jobs:
     needs: connection-test
     runs-on: ubuntu-latest
     steps:
-      - name: Get code
+      - name: Geting code
         uses: actions/checkout@v2
         with:
           lfs: true
 
-      - name: Fetch LFS assets
+      - name: Fetching LFS assets
         run: git lfs checkout
+
+      - name: Using Node.js 15.8.0
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: "15.8.0"
+
+      - name: Creating env file
+        run: |
+          touch .env
+          echo NEXTAUTH_URL=${{ secrets.DEVELOPMENT_NEXTAUTH_URL }} >> .env
+          echo NEXTAUTH_JWT_SECRET=${{ secrets.DEVELOPMENT_NEXTAUTH_JWT_SECRET }} >> .env
+          echo ADMIN_LOGIN=${{ secrets.DEVELOPMENT_ADMIN_LOGIN }} >> .env
+          echo ADMIN_PASSWORD=${{ secrets.DEVELOPMENT_ADMIN_PASSWORD }} >> .env
+          echo FIREBASE_ADMIN_PROJECT_ID=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_PROJECT_ID }} >> .env
+          echo FIREBASE_ADMIN_PRIVATE_KEY=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_PRIVATE_KEY }} >> .env
+          echo FIREBASE_ADMIN_CLIENT_EMAIL=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_CLIENT_EMAIL }} >> .env
+          cat .env
+
+      - name: Building project
+        run: |
+          yarn
+          yarn build
+
+      - name: Removing node_modules
+        run: rm -rf node_modules
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: project-artifact
+          path: ./
+
+  project-deploy:
+    name: Deploy project
+    needs: project-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Downloading build artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: project-artifact
 
       - name: Use Node.js 15.8.0
         uses: actions/setup-node@v2-beta
         with:
           node-version: "15.8.0"
 
-      - name: Building website
+      - name: Log files
         run: |
-          yarn
-          yarn build
+          ls -la
+
+      # - name: Upload website files
+      #   uses: easingthemes/ssh-deploy@main
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.DEVELOPMENT_PRIVATE_KEY }}
+      #     SOURCE: "public/"
+      #     REMOTE_HOST: ${{ secrets.DEVELOPMENT_HOST }}
+      #     REMOTE_USER: ${{ secrets.DEVELOPMENT_USERNAME }}
+      #     TARGET: "/home/deployer/diamondcar"
+      #     EXCLUDE: "yarn.lock"

@@ -52,7 +52,6 @@ jobs:
 
       - name: Removing unused files
         run: |
-          rm -rf node_modules
           rm -rf .github
           rm -rf pages
           rm -rf src

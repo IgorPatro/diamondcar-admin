@@ -75,14 +75,19 @@ jobs:
         with:
           name: project-artifact
 
-      - name: Use Node.js 16.13.0
-        uses: actions/setup-node@v2-beta
+      - name: Prepering server
+        uses: appleboy/ssh-action@master
         with:
-          node-version: "16.13.0"
-
-      - name: Log files
-        run: |
-          ls -la
+          host: ${{ secrets.DEVELOPMENT_HOST }}
+          username: ${{ secrets.DEVELOPMENT_USERNAME }}
+          password: ${{ secrets.DEVELOPMENT_PASSWORD }}
+          script: |
+            cd /home/deployer/diamondcar
+            pm2 stop ecosystem.config.js || true
+            pm2 delete ecosystem.config.js || true
+            cd /home/deployer
+            rm -rf diamondcar || true
+            mkdir diamondcar || true
 
       - name: Upload website files
         uses: easingthemes/ssh-deploy@main
@@ -93,3 +98,14 @@ jobs:
           REMOTE_USER: ${{ secrets.DEVELOPMENT_USERNAME }}
           TARGET: "/home/deployer/diamondcar"
           EXCLUDE: "yarn.lock"
+
+      - name: Starting project
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEVELOPMENT_HOST }}
+          username: ${{ secrets.DEVELOPMENT_USERNAME }}
+          password: ${{ secrets.DEVELOPMENT_PASSWORD }}
+          script: |
+            cd /home/deployer/diamondcar
+            yarn
+            pm2 start ecosystem.config.js

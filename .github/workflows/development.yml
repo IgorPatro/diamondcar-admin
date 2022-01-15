@@ -41,7 +41,7 @@ jobs:
           echo ADMIN_LOGIN=${{ secrets.DEVELOPMENT_ADMIN_LOGIN }} >> .env
           echo ADMIN_PASSWORD=${{ secrets.DEVELOPMENT_ADMIN_PASSWORD }} >> .env
           echo FIREBASE_ADMIN_PROJECT_ID=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_PROJECT_ID }} >> .env
-          echo FIREBASE_ADMIN_PRIVATE_KEY=""${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_PRIVATE_KEY }}"" >> .env
+          echo FIREBASE_ADMIN_PRIVATE_KEY=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_PRIVATE_KEY }} >> .env
           echo FIREBASE_ADMIN_CLIENT_EMAIL=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_CLIENT_EMAIL }} >> .env
           cat .env
 
@@ -52,17 +52,16 @@ jobs:
 
       - name: Removing unused files
         run: |
-          rm -rf node_modules
-          rm -rf .github
-          rm -rf pages
-          rm -rf src
-          rm .eslintrc.json
-          rm .gitignore
-          rm .env
-          rm .eslintrc.json
-          rm postcss.config.js
-          rm README.md
-          rm tailwind.config.js
+          rm -rf node_modules || true
+          rm -rf .github || true
+          rm -rf pages || true
+          rm -rf src || true
+          rm .eslintrc.json || true
+          rm .gitignore || true
+          rm .env || true
+          rm postcss.config.js || true
+          rm README.md || true
+          rm tailwind.config.js || true
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v2

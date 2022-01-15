@@ -41,7 +41,7 @@ jobs:
           echo ADMIN_LOGIN=${{ secrets.DEVELOPMENT_ADMIN_LOGIN }} >> .env
           echo ADMIN_PASSWORD=${{ secrets.DEVELOPMENT_ADMIN_PASSWORD }} >> .env
           echo FIREBASE_ADMIN_PROJECT_ID=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_PROJECT_ID }} >> .env
-          echo FIREBASE_ADMIN_PRIVATE_KEY=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_PRIVATE_KEY }} >> .env
+          echo FIREBASE_ADMIN_PRIVATE_KEY="${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_PRIVATE_KEY }}" >> .env
           echo FIREBASE_ADMIN_CLIENT_EMAIL=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_CLIENT_EMAIL }} >> .env
           cat .env
 

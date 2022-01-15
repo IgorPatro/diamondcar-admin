@@ -44,9 +44,9 @@ const UserPage = ({ userId }: Props) => {
 export const getServerSideProps = async ({ req, query }: any) => {
   const session = await getSession({ req })
 
-  // if (!session) {
-  //   return { redirect: { permanent: false, destination: "/api/auth/signin" } }
-  // }
+  if (!session) {
+    return { redirect: { permanent: false, destination: "/api/auth/signin" } }
+  }
 
   const { userId } = query
 

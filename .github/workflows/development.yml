@@ -52,12 +52,17 @@ jobs:
 
       - name: Removing unused files
         run: |
+          rm -rf node_modules
           rm -rf .github
           rm -rf pages
           rm -rf src
           rm .eslintrc.json
           rm .gitignore
-          rm -rf node_modules
+          rm .env
+          rm .eslintrc.json
+          rm postcss.config.js
+          rm README.md
+          rm tailwind.config.js
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
@@ -85,9 +90,6 @@ jobs:
             cd /home/deployer/diamondcar
             pm2 stop ecosystem.config.js || true
             pm2 delete ecosystem.config.js || true
-            cd /home/deployer
-            rm -rf diamondcar || true
-            mkdir diamondcar || true
 
       - name: Upload website files
         uses: easingthemes/ssh-deploy@main

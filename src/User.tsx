@@ -47,6 +47,16 @@ const User = ({ user, userId, fetchUser }: Props) => {
     })
   }
 
+  const deleteUser = () => {
+    axios.post("/api/user/deleteUser", { userId }).then((response) => {
+      if (response.data.status === "error") {
+        return toast.error(response.data.message)
+      }
+
+      return toast.success(response.data.message)
+    })
+  }
+
   const fetchUserRegistries = (userId: string) => {
     axios
       .post("/api/registry/getRegistriesForUser", { userId })
@@ -73,6 +83,13 @@ const User = ({ user, userId, fetchUser }: Props) => {
           onClick={sendPasswordReset}
         >
           Send password reset
+        </button>
+        <button
+          type="button"
+          className="py-2 px-4 mt-5 ml-5 bg-red-600 hover:bg-red-700 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md rounded-lg"
+          onClick={deleteUser}
+        >
+          Delete user
         </button>
         <RegistryForm
           userId={userId}

@@ -56,7 +56,6 @@ const IndexPage = () => {
   return (
     <>
       <Navigation setFilter={setFilter} filter={filter} />
-      testing is build working!
       <Users users={filter ? filteredUsers : users} />
       <UserForm fetchUsers={fetchUsers} />
     </>
@@ -66,9 +65,9 @@ const IndexPage = () => {
 export const getServerSideProps = async ({ req }: any) => {
   const session = await getSession({ req })
 
-  // if (!session) {
-  //   return { redirect: { permanent: false, destination: "/api/auth/signin" } }
-  // }
+  if (!session) {
+    return { redirect: { permanent: false, destination: "/api/auth/signin" } }
+  }
 
   return { props: {} }
 }

@@ -4,13 +4,108 @@ on: workflow_dispatch
 
 jobs:
   connection-test:
-    name: Test VPS connection
+    name: VPS connection test
     runs-on: ubuntu-latest
     steps:
-      - name: Execute remote command on vps
+      - name: Executing remote command on vps
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEVELOPMENT_HOST }}
           username: ${{ secrets.DEVELOPMENT_USERNAME }}
           password: ${{ secrets.DEVELOPMENT_PASSWORD }}
-          script: whoami
+          script: pwd
+
+  project-build:
+    name: Build project
+    needs: connection-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Geting code
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      - name: Fetching LFS assets
+        run: git lfs checkout
+
+      - name: Using Node.js 16.13.0
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: "16.13.0"
+
+      - name: Creating env file
+        run: |
+          touch .env
+          echo NEXTAUTH_URL=${{ secrets.DEVELOPMENT_NEXTAUTH_URL }} >> .env
+          echo NEXTAUTH_JWT_SECRET=${{ secrets.DEVELOPMENT_NEXTAUTH_JWT_SECRET }} >> .env
+          echo ADMIN_LOGIN=${{ secrets.DEVELOPMENT_ADMIN_LOGIN }} >> .env
+          echo ADMIN_PASSWORD=${{ secrets.DEVELOPMENT_ADMIN_PASSWORD }} >> .env
+          echo FIREBASE_ADMIN_PROJECT_ID=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_PROJECT_ID }} >> .env
+          echo FIREBASE_ADMIN_PRIVATE_KEY=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_PRIVATE_KEY }} >> .env
+          echo FIREBASE_ADMIN_CLIENT_EMAIL=${{ secrets.DEVELOPMENT_FIREBASE_ADMIN_CLIENT_EMAIL }} >> .env
+          cat .env
+
+      - name: Building project
+        run: |
+          npm install
+          npm run build
+
+      - name: Removing unused files
+        run: |
+          rm -rf node_modules || true
+          rm -rf .github || true
+          rm -rf pages || true
+          rm -rf src || true
+          rm .eslintrc.json || true
+          rm .gitignore || true
+          rm .env || true
+          rm postcss.config.js || true
+          rm README.md || true
+          rm tailwind.config.js || true
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: project-artifact
+          path: ./
+
+  project-deploy:
+    name: Deploy project
+    needs: project-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Downloading build artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: project-artifact
+
+      - name: Prepering server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEVELOPMENT_HOST }}
+          username: ${{ secrets.DEVELOPMENT_USERNAME }}
+          password: ${{ secrets.DEVELOPMENT_PASSWORD }}
+          script: |
+            cd /home/deployer/diamondcar
+            pm2 stop ecosystem.config.js || true
+            pm2 delete ecosystem.config.js || true
+
+      - name: Upload website files
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEVELOPMENT_PRIVATE_KEY }}
+          SOURCE: "./"
+          REMOTE_HOST: ${{ secrets.DEVELOPMENT_HOST }}
+          REMOTE_USER: ${{ secrets.DEVELOPMENT_USERNAME }}
+          TARGET: "/home/deployer/diamondcar"
+
+      - name: Starting project
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEVELOPMENT_HOST }}
+          username: ${{ secrets.DEVELOPMENT_USERNAME }}
+          password: ${{ secrets.DEVELOPMENT_PASSWORD }}
+          script: |
+            cd /home/deployer/diamondcar
+            npm install
+            pm2 start ecosystem.config.js

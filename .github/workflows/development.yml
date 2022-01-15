@@ -57,6 +57,7 @@ jobs:
           rm -rf src
           rm .eslintrc.json
           rm .gitignore
+          rm -rf node_modules
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
@@ -96,7 +97,6 @@ jobs:
           REMOTE_HOST: ${{ secrets.DEVELOPMENT_HOST }}
           REMOTE_USER: ${{ secrets.DEVELOPMENT_USERNAME }}
           TARGET: "/home/deployer/diamondcar"
-          EXCLUDE: "yarn.lock"
 
       - name: Starting project
         uses: appleboy/ssh-action@master

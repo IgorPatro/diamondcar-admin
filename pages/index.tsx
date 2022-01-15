@@ -56,7 +56,6 @@ const IndexPage = () => {
   return (
     <>
       <Navigation setFilter={setFilter} filter={filter} />
-      testing is build working!
       <Users users={filter ? filteredUsers : users} />
       <UserForm fetchUsers={fetchUsers} />
     </>

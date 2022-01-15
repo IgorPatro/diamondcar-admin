@@ -20,16 +20,34 @@ const handler = async (req: any, res: any) => {
     return
   }
 
-  const isUserDeleted = await FirebaseAdmin.auth()
+  const isUserInAuthServiceDeleted = await FirebaseAdmin.auth()
     .deleteUser(userId)
     .then(() => true)
     .catch((err) => {
       console.log(err)
-      false
+      return false
     })
 
-  if (!isUserDeleted) {
+  if (!isUserInAuthServiceDeleted) {
     res.json({ message: "User wasn't deleted due to error", status: "error" })
+    return
+  }
+
+  const isDatabaseUserDeleted = await FirebaseAdmin.firestore()
+    .collection("users")
+    .doc(userId)
+    .delete()
+    .then(() => true)
+    .catch((err) => {
+      console.log(err)
+      return false
+    })
+
+  if (!isDatabaseUserDeleted) {
+    res.json({
+      message: "User in database wasn't deleted due to error",
+      status: "error",
+    })
     return
   }
 

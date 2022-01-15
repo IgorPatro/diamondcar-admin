@@ -47,8 +47,8 @@ jobs:
 
       - name: Building project
         run: |
-          yarn
-          yarn build
+          npm install
+          npm run build
 
       - name: Removing unused files
         run: |
@@ -106,5 +106,5 @@ jobs:
           password: ${{ secrets.DEVELOPMENT_PASSWORD }}
           script: |
             cd /home/deployer/diamondcar
-            yarn
+            npm install
             pm2 start ecosystem.config.js
